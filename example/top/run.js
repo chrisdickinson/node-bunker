@@ -22,7 +22,9 @@ b.run({
             })
             .forEach(function (key) {
                 var count = counts[key];
-                console.log(count.times + ' ' + count.node.source());
+                console.log(
+                    count.times + ' : ' + count.node.source()
+                );
             })
         ;
     }

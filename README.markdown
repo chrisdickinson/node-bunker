@@ -40,7 +40,9 @@ b.run({
             })
             .forEach(function (key) {
                 var count = counts[key];
-                console.log(count.times + ' ' + count.node.source());
+                console.log(
+                    count.times + ' : ' + count.node.source()
+                );
             })
         ;
     }
@@ -72,6 +74,19 @@ var iv = setInterval(function () {
 
 output:
 
+    $ node example/top/run.js 
+    279 : i<30
+    270 : nop()
+    270 : nop();
+    270 : i++
+    18 : boop();
+    10 : ++times
+    10 : ++times===10
+    1 : setInterval(function(){if(++times===10){clearInterval(iv);end()}else boop()},100)
+    1 : clearInterval(iv);
+    1 : clearInterval(iv)
+    1 : end();
+    1 : end()
 
 methods
 =======
