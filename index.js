@@ -39,7 +39,8 @@ Bunker.prototype.compile = function () {
             nodes.push(node);
             node.wrap(names.call + '(' + i + ')(%s)');
         }
-        else if (node.name === 'stat' || node.name === 'throw') {
+        else if (node.name === 'stat' || node.name === 'throw'
+        || node.name === 'var') {
             nodes.push(node);
             node.wrap('{' + names.stat + '(' + i + ');%s}');
         }
