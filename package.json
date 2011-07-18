@@ -1,6 +1,6 @@
 {
     "name" : "bunker",
-    "version" : "0.0.0",
+    "version" : "0.1.0",
     "description" : "code coverage in native javascript",
     "main" : "index.js",
     "directories" : {
