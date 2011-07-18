@@ -9,20 +9,15 @@ Bunker is a module to calculate code coverage using native javascript
 examples
 ========
 
-top
----
-
-example/top/run.js:
+tiny
+----
 
 ````javascript
-
 var bunker = require('bunker');
-var fs = require('fs');
-var src = fs.readFileSync(__dirname + '/src.js', 'utf8');
+var b = bunker('var x = 0; for (var i = 0; i < 30; i++) { x++ }');
 
 var counts = {};
 
-var b = bunker(src);
 b.on('node', function (node) {
     if (!counts[node.range]) {
         counts[node.range] = { times : 0, node : node };
@@ -30,63 +25,20 @@ b.on('node', function (node) {
     counts[node.range].times ++;
 });
 
-b.run({
-    setInterval : setInterval,
-    clearInterval : clearInterval,
-    end : function () {
-        Object.keys(counts)
-            .sort(function (a, b) {
-                return counts[b].times - counts[a].times
-            })
-            .forEach(function (key) {
-                var count = counts[key];
-                console.log(
-                    count.times + ' : ' + count.node.source()
-                );
-            })
-        ;
-    }
+b.run();
+
+Object.keys(counts).forEach(function (key) {
+    var count = counts[key];
+    console.log(count.times + ' : ' + count.node.source());
 });
-````
-
-example/top/src.js:
-
-````javascript
-function boop () {
-    for (var i = 0; i < 30; i++) {
-        nop();
-    }
-}
-
-function nop () {
-    return undefined;
-}
-
-var times = 0;
-var iv = setInterval(function () {
-    if (++times === 10) {
-        clearInterval(iv);
-        end();
-    }
-    else boop()
-}, 100);
 ````
 
 output:
 
-    $ node example/top/run.js 
-    279 : i<30
-    270 : nop()
-    270 : nop();
-    270 : i++
-    18 : boop();
-    10 : ++times
-    10 : ++times===10
-    1 : setInterval(function(){if(++times===10){clearInterval(iv);end()}else boop()},100)
-    1 : clearInterval(iv);
-    1 : clearInterval(iv)
-    1 : end();
-    1 : end()
+    $ node example/tiny.js 
+    31 : i<30
+    60 : x++;
+    30 : i++
 
 methods
 =======
