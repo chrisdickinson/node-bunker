@@ -38,8 +38,9 @@ output:
     $ node example/tiny.js 
     1 : var x=0;
     31 : i<30
-    60 : x++;
     30 : i++
+    30 : x++;
+    30 : x++
 
 methods
 =======
