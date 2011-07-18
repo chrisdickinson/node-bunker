@@ -14,6 +14,7 @@ function Bunker () {
     
     this.names = {
         call : burrito.generateName(6),
+        expr : burrito.generateName(6),
         stat : burrito.generateName(6)
     };
 }
@@ -32,15 +33,23 @@ Bunker.prototype.compile = function () {
     var names = this.names;
     
     return burrito(src, function (node) {
+        var i = nodes.length;
+        
         if (node.name === 'call') {
-            var i = nodes.length;
             nodes.push(node);
             node.wrap(names.call + '(' + i + ')(%s)');
         }
         else if (node.name === 'stat' || node.name === 'throw') {
-            var i = nodes.length;
             nodes.push(node);
             node.wrap('{' + names.stat + '(' + i + ');%s}');
+        }
+        else if (node.name === 'binary') {
+            nodes.push(node);
+            node.wrap(names.expr + '(' + i + ')(%s)');
+        }
+        else if (node.name === 'unary-postfix' || node.name === 'unary-prefix') {
+            nodes.push(node);
+            node.wrap(names.expr + '(' + i + ')(%s)');
         }
     });
 };
@@ -55,7 +64,7 @@ Bunker.prototype.run = function (context) {
     context[self.names.call] = function (i) {
         var node = self.nodes[i];
         stack.unshift(node);
-        self.emit('call', node, stack);
+        self.emit('node', node, stack);
         
         return function (expr) {
             stack.shift();
@@ -63,12 +72,20 @@ Bunker.prototype.run = function (context) {
         };
     };
     
-    context[self.names.stat] = function (i) {
+    context[self.names.expr] = function (i) {
         var node = self.nodes[i];
-        self.emit('stat', node, stack);
+        self.emit('node', node, stack);
+        
+        return function (expr) {
+            return expr;
+        };
     };
     
-    console.log(src);
+    context[self.names.stat] = function (i) {
+        var node = self.nodes[i];
+        self.emit('node', node, stack);
+    };
+    
     vm.runInNewContext(src, context);
     
     return self;
