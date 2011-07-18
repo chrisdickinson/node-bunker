@@ -14,4 +14,5 @@ var iv = setInterval(function () {
         clearInterval(iv);
         end();
     }
+    else boop()
 }, 100);
