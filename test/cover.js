@@ -22,6 +22,7 @@ exports.cover = function () {
                 assert.deepEqual(counts, {
                     binary : 11,
                     'unary-postfix' : 11,
+                    'var' : 2,
                     call : 2, // setInterval and clearInterval
                     stat : 1, // clearInterval
                 });
