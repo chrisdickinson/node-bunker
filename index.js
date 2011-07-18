@@ -51,6 +51,12 @@ Bunker.prototype.compile = function () {
             nodes.push(node);
             node.wrap(names.expr + '(' + i + ')(%s)');
         }
+        
+        if (i !== nodes.length) {
+            node.range = [ node.start.line, node.start.col ].join(':')
+                + '-' + [ node.end.line, node.end.col ].join(':')
+            ;
+        }
     });
 };
 
