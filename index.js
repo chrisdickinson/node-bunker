@@ -66,7 +66,6 @@ Bunker.prototype.contributeToContext = function(context) {
   context = context || {};
   var self = this;
   var stack = [];
-  var src = self.compile();
   
   context[self.names.call] = function (i) {
       var node = self.nodes[i];
@@ -97,6 +96,7 @@ Bunker.prototype.contributeToContext = function(context) {
 };
 
 Bunker.prototype.run = function (context) {
+    var src = this.compile();
     context = this.contributeToContext(context);
 
     vm.runInNewContext(src, context);
@@ -223,8 +223,14 @@ module.exports.cover = function(fileRegex) {
     return compiledWrapper.apply(module.exports, args);
   };
 
-  return function(ready) {
+  var retval = function(ready) {
     ready(coverageData);
   };
+
+  retval.release = function() {
+    require.extensions['.js'] = originalRequire;
+  };
+
+  return retval;
 };
 
